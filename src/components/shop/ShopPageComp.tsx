@@ -37,7 +37,9 @@ import { toast } from "sonner";
 import Loading from "../loading/Loading";
 import { useSearchParams } from "next/navigation";
 
-type FilterCategory = "Category" | "Color" | "Price" | "Size" | "Material";
+// type FilterCategory = "Category" | "Color" | "Price" | "Size" | "Material";
+const filterSections = ["Categories", "Colors", "Sizes", "Materials"] as const;
+type FilterCategory = (typeof filterSections)[number];
 
 export default function ShopPageComponent() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -61,11 +63,33 @@ export default function ShopPageComponent() {
   const query = useSearchParams();
   const category = query.get("categories");
 
+  // useEffect(() => {
+  //   setSelectedFilters((prev) => ({
+  //     ...prev,
+  //     categories: category ? [category] : [],
+  //   }));
+  // }, [category]);
+
   useEffect(() => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      categories: category ? [category] : [],
-    }));
+    if (category) {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        categories: [category],
+      }));
+
+      setExpandedFilters((prev) =>
+        prev.includes("Categories" as FilterCategory)
+          ? prev
+          : [...prev, "Categories" as FilterCategory]
+      );
+    } else {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        categories: [],
+      }));
+
+      setExpandedFilters((prev) => prev.filter((f) => f !== "Categories"));
+    }
   }, [category]);
 
   const {
@@ -265,28 +289,6 @@ export default function ShopPageComponent() {
       <div className='flex flex-col md:flex-row gap-6'>
         {/* Filters sidebar */}
         <div className='w-full md:w-64 space-y-2'>
-          {/* <div className='space-y-2.5 p-4 w-64'>
-            <h3 className='font-medium'>Purchase Options</h3>
-            <div className='flex items-center space-x-2'>
-              <Checkbox
-                checked={isBuyable}
-                id='buyable'
-                onClick={() => setIsBuyable(!isBuyable)}
-              />
-              <Label htmlFor='buyable' className='text-sm'>
-                Buyable
-              </Label>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <Checkbox
-                id='rentable'
-                checked={isRentable}
-                onClick={() => setIsRentable(!isRentable)}
-              />
-              <Label htmlFor='rentable'>Rentable</Label>
-            </div>
-          </div> */}
-
           {["Categories", "Colors", "Sizes", "Materials"].map((filter) => {
             const options =
               products?.meta?.filters?.[

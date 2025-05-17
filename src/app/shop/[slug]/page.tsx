@@ -264,18 +264,6 @@ export default function ProductDetailsPage() {
                 </svg>
               ))}
             </div>
-
-            {/* {viewMode === "list" && (
-              <p className='text-[#545454] text-sm mb-6'>
-                {product.description}
-              </p>
-            )}
-
-            {viewMode === "list" && (
-              <Button className='w-[126px] h-[43px] bg-primary text-base text-[#4A3300] cursor-pointer rounded-none'>
-                See Details
-              </Button>
-            )} */}
           </Link>
         </div>
       </div>
@@ -347,7 +335,9 @@ export default function ProductDetailsPage() {
                 </h2>
                 <div className='flex items-center'>
                   <Star className='w-5 h-5 fill-yellow-400 text-yellow-400' />
-                  <span className='ml-1 text-lg text-[#000000]'>{product?.data?.rating}</span>
+                  <span className='ml-1 text-lg text-[#000000]'>
+                    {product?.data?.rating}
+                  </span>
                 </div>
               </div>
 
